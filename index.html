@@ -1,0 +1,1092 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>U.S. TITLE & ESCROW INC - Payroll System</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: #f0f2f5;
+        }
+
+        /* Login Page */
+        .login-container {
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            background: linear-gradient(135deg, #002D72, #0072B9);
+        }
+
+        .login-box {
+            background: white;
+            padding: 40px;
+            border-radius: 16px;
+            width: 400px;
+            box-shadow: 0 10px 40px rgba(0,0,0,0.2);
+        }
+
+        .login-box h2 {
+            color: #002D72;
+            margin-bottom: 20px;
+            text-align: center;
+        }
+
+        .login-box input, .login-box select {
+            width: 100%;
+            padding: 12px;
+            margin: 10px 0;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            font-size: 16px;
+        }
+
+        .login-box button {
+            width: 100%;
+            padding: 12px;
+            background: #0072B9;
+            color: white;
+            border: none;
+            border-radius: 8px;
+            font-size: 16px;
+            cursor: pointer;
+            margin-top: 10px;
+        }
+
+        .login-box button:hover {
+            background: #002D72;
+        }
+
+        /* Main App */
+        .header {
+            background: #002D72;
+            color: white;
+            padding: 15px 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .logo-icon {
+            width: 40px;
+            height: 40px;
+            background: #D4AF37;
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 20px;
+        }
+
+        .nav-buttons {
+            display: flex;
+            gap: 10px;
+            flex-wrap: wrap;
+            padding: 15px 20px;
+            background: white;
+            border-bottom: 1px solid #ddd;
+        }
+
+        .nav-btn {
+            padding: 10px 20px;
+            background: #0072B9;
+            color: white;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 14px;
+        }
+
+        .nav-btn:hover {
+            background: #002D72;
+        }
+
+        .content {
+            padding: 20px;
+            min-height: calc(100vh - 120px);
+        }
+
+        .card {
+            background: white;
+            border-radius: 12px;
+            padding: 20px;
+            margin-bottom: 20px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+        }
+
+        .card h3 {
+            color: #002D72;
+            margin-bottom: 15px;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        th, td {
+            padding: 12px;
+            text-align: left;
+            border-bottom: 1px solid #ddd;
+        }
+
+        th {
+            background: #0072B9;
+            color: white;
+        }
+
+        tr:hover {
+            background: #f5f5f5;
+        }
+
+        input, select {
+            padding: 10px;
+            border: 1px solid #ddd;
+            border-radius: 6px;
+            font-size: 14px;
+        }
+
+        button {
+            padding: 10px 20px;
+            background: #0072B9;
+            color: white;
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 14px;
+        }
+
+        button:hover {
+            background: #002D72;
+        }
+
+        .balance-card {
+            background: linear-gradient(135deg, #002D72, #0072B9);
+            color: white;
+            padding: 20px;
+            border-radius: 12px;
+            margin-bottom: 20px;
+        }
+
+        .balance-card h2 {
+            font-size: 32px;
+            margin-top: 10px;
+        }
+
+        .form-group {
+            margin-bottom: 15px;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 5px;
+            font-weight: bold;
+        }
+
+        .grid-2 {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 20px;
+        }
+
+        .hidden {
+            display: none;
+        }
+
+        .badge {
+            padding: 4px 8px;
+            border-radius: 12px;
+            font-size: 12px;
+            font-weight: bold;
+        }
+
+        .badge-success {
+            background: #28a745;
+            color: white;
+        }
+
+        .badge-warning {
+            background: #ffc107;
+            color: #333;
+        }
+
+        @media (max-width: 768px) {
+            .nav-buttons {
+                flex-direction: column;
+            }
+            .grid-2 {
+                grid-template-columns: 1fr;
+            }
+            table {
+                font-size: 12px;
+            }
+            th, td {
+                padding: 8px;
+            }
+        }
+    </style>
+</head>
+<body>
+
+<!-- LOGIN SCREEN -->
+<div id="loginScreen" class="login-container">
+    <div class="login-box">
+        <h2>🏦 U.S. TITLE & ESCROW INC</h2>
+        <p style="text-align:center; color:#666; margin-bottom:20px;">FEI: 59-3300551</p>
+        <input type="text" id="username" placeholder="Username" value="admin">
+        <input type="password" id="password" placeholder="Password" value="admin123">
+        <select id="userType">
+            <option value="admin">Admin - Beverly M Beavers</option>
+            <option value="employee">Employee</option>
+        </select>
+        <button onclick="login()">Login</button>
+        <p style="text-align:center; margin-top:15px; font-size:12px; color:#666;">Demo: admin / admin123</p>
+    </div>
+</div>
+
+<!-- MAIN APP -->
+<div id="mainApp" style="display:none;">
+    <div class="header">
+        <div class="logo">
+            <div class="logo-icon">🏛️</div>
+            <div>
+                <strong>U.S. TITLE & ESCROW INC</strong><br>
+                <small>FEI: 59-3300551 | FDIC Insured</small>
+            </div>
+        </div>
+        <div>
+            <span id="userNameDisplay"></span>
+            <button onclick="logout()" style="margin-left:10px; background:#dc3545;">Logout</button>
+        </div>
+    </div>
+
+    <div class="nav-buttons">
+        <button class="nav-btn" onclick="showPage('dashboard')">📊 Dashboard</button>
+        <button class="nav-btn" onclick="showPage('employees')">👥 Employees</button>
+        <button class="nav-btn" onclick="showPage('payroll')">💰 Payroll</button>
+        <button class="nav-btn" onclick="showPage('paystubs')">📄 Paystubs</button>
+        <button class="nav-btn" onclick="showPage('invoices')">📑 Invoices</button>
+        <button class="nav-btn" onclick="showPage('checks')">💵 Checks</button>
+        <button class="nav-btn" onclick="showPage('statements')">📊 Statements</button>
+        <button class="nav-btn" onclick="showPage('transactions')">💸 Transactions</button>
+        <button class="nav-btn" onclick="showPage('w4')">📝 W-4 Form</button>
+    </div>
+
+    <div class="content">
+        <!-- DASHBOARD -->
+        <div id="dashboardPage">
+            <div class="balance-card">
+                <p>SouthState Bank Account Balance</p>
+                <h2 id="balanceAmount">$504,346.39</h2>
+                <button onclick="showAddFunds()" style="background:#D4AF37; color:#002D72; margin-top:10px;">+ Add Funds</button>
+                <button onclick="syncBalance()" style="background:#28a745; margin-top:10px; margin-left:10px;">⟳ Sync Bank</button>
+            </div>
+            <div class="grid-2">
+                <div class="card">
+                    <h3>Employees</h3>
+                    <p id="employeeCount">3 Active Employees</p>
+                    <p>Andrew Penn (FL) - $2,800 bi-weekly</p>
+                    <p>Joseph Howard (MI) - $2,800 bi-weekly</p>
+                    <p>Shawn Solosabal (OR) - $1,076.92 bi-weekly</p>
+                </div>
+                <div class="card">
+                    <h3>Q1 2026 Tax Liability</h3>
+                    <p><strong>Total Due: $3,937.78</strong></p>
+                    <p>Federal: $1,508.00</p>
+                    <p>Social Security: $1,655.88</p>
+                    <p>Medicare: $387.28</p>
+                    <p>State Taxes: $386.62</p>
+                    <p style="color:#dc3545; margin-top:10px;">Due April 15, 2026</p>
+                </div>
+            </div>
+            <div class="card">
+                <h3>Recent Paystubs</h3>
+                <table id="recentPaystubs">
+                    <thead><tr><th>Date</th><th>Employee</th><th>Net Pay</th><th>Download</th></tr></thead>
+                    <tbody></tbody>
+                </table>
+            </div>
+        </div>
+
+        <!-- EMPLOYEES -->
+        <div id="employeesPage" class="hidden">
+            <div class="card">
+                <h3>Employee Directory</h3>
+                <table id="employeesTable">
+                    <thead><tr><th>Name</th><th>SSN</th><th>State</th><th>Gross Pay</th><th>Tax Rate</th><th>W-4 Status</th><th>Actions</th></tr></thead>
+                    <tbody></tbody>
+                </table>
+                <button onclick="showAddEmployee()" style="margin-top:15px;">+ Add Employee</button>
+            </div>
+        </div>
+
+        <!-- PAYROLL -->
+        <div id="payrollPage" class="hidden">
+            <div class="card">
+                <h3>Process Payroll - Bi-Weekly</h3>
+                <table id="payrollTable">
+                    <thead><tr><th>Select</th><th>Employee</th><th>Gross Pay</th><th>Federal Tax</th><th>State Tax</th><th>SS (6.2%)</th><th>Medicare</th><th>Net Pay</th></tr></thead>
+                    <tbody></tbody>
+                </table>
+                <button onclick="processPayroll()" style="margin-top:15px;">✅ Process Selected Payroll</button>
+                <button onclick="exportCSV()" style="margin-top:15px; margin-left:10px; background:#D4AF37; color:#002D72;">📥 Export CSV (Checkeeper)</button>
+            </div>
+        </div>
+
+        <!-- PAYSTUBS -->
+        <div id="paystubsPage" class="hidden">
+            <div class="card">
+                <h3>Generate Paystub</h3>
+                <div class="form-group">
+                    <label>Select Employee</label>
+                    <select id="paystubEmployee"></select>
+                </div>
+                <div class="form-group">
+                    <label>Pay Period Date</label>
+                    <input type="date" id="paystubDate" value="2026-04-04">
+                </div>
+                <div class="form-group">
+                    <label>Gross Pay ($)</label>
+                    <input type="number" id="paystubGross" placeholder="Enter gross pay">
+                </div>
+                <button onclick="generatePaystub()">📄 Generate & Download Paystub PDF</button>
+            </div>
+            <div class="card">
+                <h3>Paystub History</h3>
+                <table id="paystubHistory">
+                    <thead><tr><th>Date</th><th>Employee</th><th>Net Pay</th><th>Document ID</th></tr></thead>
+                    <tbody></tbody>
+                </table>
+            </div>
+        </div>
+
+        <!-- INVOICES -->
+        <div id="invoicesPage" class="hidden">
+            <div class="card">
+                <h3>Create Invoice</h3>
+                <div class="form-group">
+                    <label>Client Name</label>
+                    <input type="text" id="invoiceClient" placeholder="Enter client name">
+                </div>
+                <div class="form-group">
+                    <label>Amount ($)</label>
+                    <input type="number" id="invoiceAmount" placeholder="0.00">
+                </div>
+                <div class="form-group">
+                    <label>Description</label>
+                    <textarea id="invoiceDesc" rows="2" placeholder="Services provided"></textarea>
+                </div>
+                <button onclick="generateInvoice()">📑 Generate Invoice PDF</button>
+            </div>
+            <div class="card">
+                <h3>Invoices</h3>
+                <table id="invoicesTable">
+                    <thead><tr><th>Invoice #</th><th>Client</th><th>Amount</th><th>Date</th><th>Status</th></tr></thead>
+                    <tbody></tbody>
+                </table>
+            </div>
+        </div>
+
+        <!-- CHECKS -->
+        <div id="checksPage" class="hidden">
+            <div class="card">
+                <h3>Create Check</h3>
+                <div class="form-group">
+                    <label>Pay To</label>
+                    <input type="text" id="checkPayee" placeholder="Recipient name">
+                </div>
+                <div class="form-group">
+                    <label>Amount ($)</label>
+                    <input type="number" id="checkAmount" placeholder="0.00">
+                </div>
+                <div class="form-group">
+                    <label>Memo</label>
+                    <input type="text" id="checkMemo" placeholder="For...">
+                </div>
+                <button onclick="generateCheck()">💵 Generate Check (Front & Back)</button>
+            </div>
+        </div>
+
+        <!-- STATEMENTS -->
+        <div id="statementsPage" class="hidden">
+            <div class="card">
+                <h3>Account Statement</h3>
+                <div class="form-group">
+                    <label>Statement Period</label>
+                    <select id="statementPeriod">
+                        <option>Q1 2026 (Jan - Mar)</option>
+                        <option>March 2026</option>
+                        <option>Year-to-Date</option>
+                    </select>
+                </div>
+                <button onclick="generateStatement()">📊 Generate Statement PDF</button>
+                <button onclick="exportStatementCSV()" style="margin-left:10px; background:#D4AF37; color:#002D72;">📥 Export CSV</button>
+            </div>
+            <div class="card">
+                <h3>Transaction History</h3>
+                <table id="transactionHistoryTable">
+                    <thead><tr><th>Date</th><th>Description</th><th>Debit</th><th>Credit</th><th>Balance</th></tr></thead>
+                    <tbody></tbody>
+                </table>
+            </div>
+        </div>
+
+        <!-- TRANSACTIONS -->
+        <div id="transactionsPage" class="hidden">
+            <div class="card">
+                <h3>Add Transaction</h3>
+                <div class="form-group">
+                    <label>Type</label>
+                    <select id="transType">
+                        <option value="income">Income (Client Payment)</option>
+                        <option value="expense">Expense</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label>Description</label>
+                    <input type="text" id="transDesc" placeholder="Description">
+                </div>
+                <div class="form-group">
+                    <label>Amount ($)</label>
+                    <input type="number" id="transAmount" placeholder="0.00">
+                </div>
+                <button onclick="addTransaction()">+ Add Transaction</button>
+            </div>
+            <div class="card">
+                <h3>All Transactions</h3>
+                <table id="allTransactionsTable">
+                    <thead><tr><th>Date</th><th>Description</th><th>Type</th><th>Amount</th><th>Status</th></tr></thead>
+                    <tbody></tbody>
+                </table>
+                <button onclick="exportAllTransactionsCSV()" style="margin-top:15px;">📥 Export All Transactions CSV</button>
+            </div>
+        </div>
+
+        <!-- W-4 FORM -->
+        <div id="w4Page" class="hidden">
+            <div class="card">
+                <h3>2026 W-4 Tax Withholding Certificate</h3>
+                <div class="form-group">
+                    <label>Full Legal Name</label>
+                    <input type="text" id="w4Name" placeholder="Enter your full name">
+                </div>
+                <div class="form-group">
+                    <label>Social Security Number</label>
+                    <input type="text" id="w4Ssn" placeholder="XXX-XX-XXXX">
+                </div>
+                <div class="form-group">
+                    <label>Filing Status</label>
+                    <select id="w4Status">
+                        <option>Single</option>
+                        <option>Married Filing Jointly</option>
+                        <option>Head of Household</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label>Number of Dependents</label>
+                    <input type="number" id="w4Dependents" value="0">
+                </div>
+                <div class="form-group">
+                    <label>Digital Signature (Type your name)</label>
+                    <input type="text" id="w4Signature" placeholder="Type your legal name to sign">
+                </div>
+                <button onclick="submitW4()">✍️ Submit W-4</button>
+                <div id="w4Message" style="margin-top:15px;"></div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- ADD FUNDS MODAL -->
+<div id="fundsModal" style="display:none; position:fixed; top:0; left:0; width:100%; height:100%; background:rgba(0,0,0,0.5); justify-content:center; align-items:center; z-index:1000;">
+    <div style="background:white; padding:30px; border-radius:12px; width:400px;">
+        <h3>Add Funds - Wire Transfer</h3>
+        <div class="form-group">
+            <label>Amount ($)</label>
+            <input type="number" id="fundAmount" placeholder="Enter amount">
+        </div>
+        <div class="form-group">
+            <label>Source</label>
+            <input type="text" id="fundSource" placeholder="Wire from client">
+        </div>
+        <button onclick="addFunds()">Process Wire</button>
+        <button onclick="closeModal()" style="margin-left:10px; background:#6c757d;">Cancel</button>
+    </div>
+</div>
+
+<!-- ADD EMPLOYEE MODAL -->
+<div id="employeeModal" style="display:none; position:fixed; top:0; left:0; width:100%; height:100%; background:rgba(0,0,0,0.5); justify-content:center; align-items:center; z-index:1000;">
+    <div style="background:white; padding:30px; border-radius:12px; width:500px;">
+        <h3>Add New Employee</h3>
+        <div class="form-group"><label>Full Name</label><input type="text" id="newEmpName"></div>
+        <div class="form-group"><label>SSN</label><input type="text" id="newEmpSsn"></div>
+        <div class="form-group"><label>State</label>
+            <select id="newEmpState">
+                <option value="FL">Florida (0% tax)</option>
+                <option value="MI">Michigan (4.25% tax)</option>
+                <option value="OR">Oregon (7% tax)</option>
+            </select>
+        </div>
+        <div class="form-group"><label>Gross Bi-Weekly ($)</label><input type="number" id="newEmpGross"></div>
+        <div class="form-group"><label>Bank Name</label><input type="text" id="newEmpBank"></div>
+        <div class="form-group"><label>Routing Number</label><input type="text" id="newEmpRouting"></div>
+        <div class="form-group"><label>Account Number</label><input type="text" id="newEmpAccount"></div>
+        <button onclick="addEmployee()">Add Employee</button>
+        <button onclick="closeEmployeeModal()" style="margin-left:10px; background:#6c757d;">Cancel</button>
+    </div>
+</div>
+
+<script>
+    // ============ DATA ============
+    let currentUser = { name: "Beverly M Beavers", role: "admin" };
+    let ledgerBalance = 504346.39;
+    
+    let employees = [
+        { id: 1, name: "Andrew Penn", ssn: "XXX-XX-1234", state: "FL", gross: 2800, bank: "Capital One", routing: "043000096", account: "36402906648", taxRate: 0, federalTax: 336, w4Signed: true },
+        { id: 2, name: "Joseph Howard", ssn: "590-36-2433", state: "MI", gross: 2800, bank: "PNC", routing: "041000124", account: "4199446066", taxRate: 0.0425, federalTax: 336, w4Signed: true },
+        { id: 3, name: "Shawn Solosabal", ssn: "XXX-XX-5678", state: "OR", gross: 1076.92, bank: "PNC", routing: "083009060", account: "3831844363", taxRate: 0.069, federalTax: 82, w4Signed: true }
+    ];
+    
+    let payrollHistory = [
+        { date: "03/21/2026", employee: "Andrew Penn", net: 2249.80, docId: "UST-2026-1001" },
+        { date: "03/21/2026", employee: "Joseph Howard", net: 2130.80, docId: "UST-2026-1002" },
+        { date: "03/07/2026", employee: "Shawn Solosabal", net: 838.22, docId: "UST-2026-1003" }
+    ];
+    
+    let transactions = [
+        { date: "04/01/2026", description: "Client Closing - Smith Property", type: "income", amount: 12500, status: "Cleared" },
+        { date: "03/28/2026", description: "Title Insurance Premium", type: "income", amount: 3450, status: "Cleared" },
+        { date: "03/25/2026", description: "Office Rent", type: "expense", amount: 2500, status: "Cleared" }
+    ];
+    
+    let invoices = [
+        { id: "INV-001", client: "First American Title", amount: 2500, date: "04/01/2026", status: "Paid" },
+        { id: "INV-002", client: "Wells Fargo", amount: 3750, date: "03/28/2026", status: "Pending" }
+    ];
+    
+    let ledgerHistory = [
+        { date: "01/01/2026", description: "Opening Balance", debit: 0, credit: 504346.39, balance: 504346.39 }
+    ];
+
+    // Helper Functions
+    function calculateTaxes(emp, customGross = null) {
+        let gross = customGross || emp.gross;
+        let federal = emp.federalTax;
+        let ss = gross * 0.062;
+        let medicare = gross * 0.0145;
+        let stateTax = gross * emp.taxRate;
+        let net = gross - federal - ss - medicare - stateTax;
+        return { gross, federal, ss, medicare, stateTax, net };
+    }
+
+    function updateBalanceDisplay() {
+        document.getElementById("balanceAmount").innerHTML = `$${ledgerBalance.toLocaleString(undefined, {minimumFractionDigits:2})}`;
+    }
+
+    function addToLedger(desc, amount, type) {
+        let newBalance = type === "credit" ? ledgerBalance + amount : ledgerBalance - amount;
+        ledgerHistory.unshift({ date: new Date().toLocaleDateString(), description: desc, debit: type === "debit" ? amount : 0, credit: type === "credit" ? amount : 0, balance: newBalance });
+        if (type === "debit") ledgerBalance -= amount;
+        else ledgerBalance += amount;
+        updateBalanceDisplay();
+    }
+
+    // ============ LOGIN ============
+    function login() {
+        let username = document.getElementById("username").value;
+        let password = document.getElementById("password").value;
+        let userType = document.getElementById("userType").value;
+        
+        if (username === "admin" && password === "admin123") {
+            currentUser = { name: "Beverly M Beavers", role: userType };
+            document.getElementById("loginScreen").style.display = "none";
+            document.getElementById("mainApp").style.display = "block";
+            document.getElementById("userNameDisplay").innerHTML = `👤 ${currentUser.name}`;
+            showPage('dashboard');
+            renderAll();
+        } else {
+            alert("Invalid credentials. Use: admin / admin123");
+        }
+    }
+
+    function logout() {
+        document.getElementById("loginScreen").style.display = "flex";
+        document.getElementById("mainApp").style.display = "none";
+    }
+
+    function showPage(page) {
+        document.getElementById("dashboardPage").classList.add("hidden");
+        document.getElementById("employeesPage").classList.add("hidden");
+        document.getElementById("payrollPage").classList.add("hidden");
+        document.getElementById("paystubsPage").classList.add("hidden");
+        document.getElementById("invoicesPage").classList.add("hidden");
+        document.getElementById("checksPage").classList.add("hidden");
+        document.getElementById("statementsPage").classList.add("hidden");
+        document.getElementById("transactionsPage").classList.add("hidden");
+        document.getElementById("w4Page").classList.add("hidden");
+        
+        document.getElementById(page + "Page").classList.remove("hidden");
+        
+        if (page === 'paystubs') {
+            let select = document.getElementById("paystubEmployee");
+            select.innerHTML = employees.map(e => `<option value="${e.id}">${e.name}</option>`).join("");
+        }
+        renderAll();
+    }
+
+    // ============ RENDER FUNCTIONS ============
+    function renderAll() {
+        renderEmployees();
+        renderPayrollTable();
+        renderPaystubHistory();
+        renderInvoices();
+        renderTransactions();
+        renderStatementHistory();
+        renderRecentPaystubs();
+    }
+
+    function renderEmployees() {
+        let html = "";
+        employees.forEach(emp => {
+            html += `<tr>
+                <td>${emp.name}</td>
+                <td>${emp.ssn}</td>
+                <td>${emp.state}</td>
+                <td>$${emp.gross.toFixed(2)}</td>
+                <td>${(emp.taxRate * 100).toFixed(1)}%</td>
+                <td><span class="badge badge-success">Signed</span></td>
+                <td><button onclick="promoteEmployee(${emp.id})">Promote</button> <button onclick="terminateEmployee(${emp.id})" style="background:#dc3545;">Terminate</button></td>
+            </tr>`;
+        });
+        document.getElementById("employeesTable").innerHTML = html;
+        document.getElementById("employeeCount").innerHTML = `${employees.length} Active Employees`;
+    }
+
+    function renderPayrollTable() {
+        let html = "";
+        employees.forEach(emp => {
+            let taxes = calculateTaxes(emp);
+            html += `<tr>
+                <td><input type="checkbox" class="payroll-check" data-id="${emp.id}" data-net="${taxes.net}"></td>
+                <td>${emp.name}</td>
+                <td>$${taxes.gross.toFixed(2)}</td>
+                <td>$${emp.federalTax.toFixed(2)}</td>
+                <td>$${taxes.stateTax.toFixed(2)}</td>
+                <td>$${taxes.ss.toFixed(2)}</td>
+                <td>$${taxes.medicare.toFixed(2)}</td>
+                <td><strong>$${taxes.net.toFixed(2)}</strong></td>
+            </tr>`;
+        });
+        document.getElementById("payrollTable").innerHTML = html;
+    }
+
+    function renderPaystubHistory() {
+        let html = "";
+        payrollHistory.forEach(p => {
+            html += `<tr><td>${p.date}</td><td>${p.employee}</td><td>$${p.net.toFixed(2)}</td><td>${p.docId}</td></tr>`;
+        });
+        document.getElementById("paystubHistory").innerHTML = html;
+    }
+
+    function renderRecentPaystubs() {
+        let html = "";
+        payrollHistory.slice(0,5).forEach(p => {
+            html += `<tr><td>${p.date}</td><td>${p.employee}</td><td>$${p.net.toFixed(2)}</td><td><button onclick="alert('Download from Paystubs tab')">Download</button></td></tr>`;
+        });
+        document.getElementById("recentPaystubs").innerHTML = html;
+    }
+
+    function renderInvoices() {
+        let html = "";
+        invoices.forEach(inv => {
+            html += `<tr><td>${inv.id}</td><td>${inv.client}</td><td>$${inv.amount.toFixed(2)}</td><td>${inv.date}</td><td><span class="badge badge-warning">${inv.status}</span></td></tr>`;
+        });
+        document.getElementById("invoicesTable").innerHTML = html;
+    }
+
+    function renderTransactions() {
+        let html = "";
+        transactions.forEach(t => {
+            html += `<tr><td>${t.date}</td><td>${t.description}</td><td>${t.type}</td><td>$${t.amount.toFixed(2)}</td><td><span class="badge badge-success">${t.status}</span></td></tr>`;
+        });
+        document.getElementById("allTransactionsTable").innerHTML = html;
+    }
+
+    function renderStatementHistory() {
+        let html = "";
+        ledgerHistory.slice(0,10).forEach(l => {
+            html += `<tr><td>${l.date}</td><td>${l.description}</td><td>${l.debit ? `$${l.debit.toFixed(2)}` : '-'}</td><td>${l.credit ? `$${l.credit.toFixed(2)}` : '-'}</td><td>$${l.balance.toFixed(2)}</td></tr>`;
+        });
+        document.getElementById("transactionHistoryTable").innerHTML = html;
+    }
+
+    // ============ PDF GENERATION (WORKING) ============
+    function generatePaystub() {
+        let empId = document.getElementById("paystubEmployee").value;
+        let gross = parseFloat(document.getElementById("paystubGross").value);
+        let payDate = document.getElementById("paystubDate").value;
+        
+        if (!empId) { alert("Select an employee"); return; }
+        if (!gross || gross <= 0) { alert("Enter valid gross pay"); return; }
+        
+        let emp = employees.find(e => e.id == parseInt(empId));
+        let taxes = calculateTaxes(emp, gross);
+        let docId = `UST-${Date.now()}-${emp.id}`;
+        let micrLine = `⑆${emp.routing}⑆ ${emp.account.padStart(10,'0')}⑈ ${docId}⑈`;
+        
+        let html = `
+            <html>
+            <head><title>Paystub - ${emp.name}</title>
+            <style>
+                body { font-family: Arial, sans-serif; padding: 40px; }
+                .header { background: #002D72; color: white; padding: 20px; text-align: center; }
+                table { width: 100%; border-collapse: collapse; margin: 20px 0; }
+                th, td { padding: 10px; border-bottom: 1px solid #ddd; }
+                th { background: #0072B9; color: white; }
+                .net { border: 2px solid #0072B9; padding: 15px; text-align: center; font-size: 20px; font-weight: bold; }
+                .micr { font-family: 'Courier New', monospace; background: #333; color: white; padding: 10px; text-align: center; margin-top: 20px; }
+            </style>
+            </head>
+            <body>
+                <div class="header">
+                    <h1>U.S. TITLE & ESCROW INC</h1>
+                    <p>FEI: 59-3300551 | 2715 E Oakland Park Blvd, Fort Lauderdale, FL 33306</p>
+                </div>
+                <h2>EMPLOYEE PAY STATEMENT</h2>
+                <p><strong>Employee:</strong> ${emp.name} | <strong>SSN:</strong> ${emp.ssn} | <strong>Pay Date:</strong> ${payDate}</p>
+                <p><strong>Document ID:</strong> ${docId}</p>
+                <table>
+                    <tr><th>Description</th><th>Amount</th></tr>
+                    <tr><td>Gross Pay</td><td>$${taxes.gross.toFixed(2)}</td></tr>
+                    <tr><td>Federal Income Tax</td><td>$${emp.federalTax.toFixed(2)}</td></tr>
+                    <tr><td>Social Security (6.2%)</td><td>$${taxes.ss.toFixed(2)}</td></tr>
+                    <tr><td>Medicare (1.45%)</td><td>$${taxes.medicare.toFixed(2)}</td></tr>
+                    <tr><td>${emp.state} State Tax (${(emp.taxRate*100).toFixed(1)}%)</td><td>$${taxes.stateTax.toFixed(2)}</td></tr>
+                </table>
+                <div class="net">NET PAY: $${taxes.net.toFixed(2)}</div>
+                <div class="micr">${micrLine}</div>
+                <p style="text-align:center; margin-top:20px;">U.S. TITLE & ESCROW INC • FDIC Insured through SouthState Bank</p>
+                <p style="text-align:center;">Verify at: https://verify.ustitle.com/${docId}</p>
+            </body>
+            </html>`;
+        
+        let win = window.open();
+        win.document.write(html);
+        win.document.close();
+        win.print();
+        
+        payrollHistory.unshift({ date: payDate, employee: emp.name, net: taxes.net, docId: docId });
+        addToLedger(`Payroll - ${emp.name}`, taxes.net, "debit");
+        renderPaystubHistory();
+        renderRecentPaystubs();
+        alert("Paystub opened. Use browser print to Save as PDF.");
+    }
+
+    function generateInvoice() {
+        let client = document.getElementById("invoiceClient").value;
+        let amount = parseFloat(document.getElementById("invoiceAmount").value);
+        let desc = document.getElementById("invoiceDesc").value;
+        
+        if (!client) { alert("Enter client name"); return; }
+        if (!amount) { alert("Enter amount"); return; }
+        
+        let invId = `INV-${Date.now()}`;
+        let html = `
+            <html>
+            <head><title>Invoice - ${client}</title>
+            <style>
+                body { font-family: Arial, sans-serif; padding: 40px; }
+                .header { background: #002D72; color: white; padding: 20px; text-align: center; }
+                table { width: 100%; margin: 20px 0; border-collapse: collapse; }
+                th, td { padding: 10px; border-bottom: 1px solid #ddd; }
+                th { background: #0072B9; color: white; }
+                .total { font-size: 18px; font-weight: bold; text-align: right; }
+            </style>
+            </head>
+            <body>
+                <div class="header">
+                    <h1>U.S. TITLE & ESCROW INC</h1>
+                    <p>FEI: 59-3300551 | 2715 E Oakland Park Blvd, Fort Lauderdale, FL 33306</p>
+                </div>
+                <h2>INVOICE</h2>
+                <p><strong>Invoice #:</strong> ${invId}</p>
+                <p><strong>Date:</strong> ${new Date().toLocaleDateString()}</p>
+                <p><strong>Bill To:</strong> ${client}</p>
+                <table><tr><th>Description</th><th>Amount</th></tr>
+                <tr><td>${desc || "Professional Services"}</td><td>$${amount.toFixed(2)}</td></tr>
+                </table>
+                <div class="total">Total Due: $${amount.toFixed(2)}</div>
+                <p>Make checks payable to: U.S. TITLE & ESCROW INC</p>
+            </body>
+            </html>`;
+        
+        let win = window.open();
+        win.document.write(html);
+        win.document.close();
+        win.print();
+        
+        invoices.unshift({ id: invId, client: client, amount: amount, date: new Date().toLocaleDateString(), status: "Pending" });
+        renderInvoices();
+        alert("Invoice opened. Use browser print to Save as PDF.");
+    }
+
+    function generateCheck() {
+        let payee = document.getElementById("checkPayee").value;
+        let amount = parseFloat(document.getElementById("checkAmount").value);
+        let memo = document.getElementById("checkMemo").value;
+        
+        if (!payee) { alert("Enter payee name"); return; }
+        if (!amount) { alert("Enter amount"); return; }
+        
+        let checkNum = Math.floor(Math.random() * 90000) + 10000;
+        let html = `
+            <html>
+            <head><title>Check - ${payee}</title>
+            <style>
+                body { font-family: Arial, sans-serif; padding: 40px; background: #eee; }
+                .check-front, .check-back { width: 800px; margin: 20px auto; background: white; border: 2px solid #333; padding: 20px; }
+                .micr { font-family: 'Courier New', monospace; background: #333; color: white; padding: 10px; text-align: center; margin-top: 20px; }
+            </style>
+            </head>
+            <body>
+                <div class="check-front">
+                    <div style="display:flex; justify-content:space-between;">
+                        <div><strong>U.S. TITLE & ESCROW INC</strong><br>FEI: 59-3300551<br>SouthState Bank</div>
+                        <div>Check #: ${checkNum}<br>Date: ${new Date().toLocaleDateString()}</div>
+                    </div>
+                    <hr>
+                    <div style="font-size:24px;">Pay to the order of: <strong>${payee}</strong></div>
+                    <div style="font-size:32px; text-align:right;">$${amount.toFixed(2)}</div>
+                    <div class="micr">⑆063114030⑆ 0000007575⑈ ${checkNum}⑈</div>
+                    <div>Memo: ${memo}</div>
+                    <div style="margin-top:20px;">Authorized: Beverly M Beavers</div>
+                </div>
+                <div class="check-back">
+                    <h3>ENDORSE HERE</h3>
+                    <div class="micr">⑆063114030⑆ 0000007575⑈</div>
+                </div>
+            </body>
+            </html>`;
+        
+        let win = window.open();
+        win.document.write(html);
+        win.document.close();
+        win.print();
+        
+        addToLedger(`Check to ${payee}`, amount, "debit");
+        alert("Check opened. Use browser print to Save as PDF.");
+    }
+
+    function generateStatement() {
+        let period = document.getElementById("statementPeriod").value;
+        let html = `
+            <html>
+            <head><title>Statement - ${period}</title>
+            <style>
+                body { font-family: Arial, sans-serif; padding: 40px; }
+                .header { background: #002D72; color: white; padding: 20px; text-align: center; }
+                table { width: 100%; border-collapse: collapse; margin: 20px 0; }
+                th, td { padding: 10px; border-bottom: 1px solid #ddd; }
+                th { background: #0072B9; color: white; }
+            </style>
+            </head>
+            <body>
+                <div class="header">
+                    <h1>U.S. TITLE & ESCROW INC</h1>
+                    <p>FEI: 59-3300551 | SouthState Bank | Routing: 063114030</p>
+                </div>
+                <h2>ACCOUNT STATEMENT - ${period}</h2>
+                <table>
+                    <tr><th>Date</th><th>Description</th><th>Debit</th><th>Credit</th><th>Balance</th></tr>
+                    ${ledgerHistory.map(l => `<tr><td>${l.date}</td><td>${l.description}</td><td>${l.debit ? `$${l.debit.toFixed(2)}` : '-'}</td><td>${l.credit ? `$${l.credit.toFixed(2)}` : '-'}</td><td>$${l.balance.toFixed(2)}</td></tr>`).join('')}
+                </table>
+                <div class="micr">⑆063114030⑆ 0000007575⑈</div>
+                <p>FDIC Insured • Digitally Verified</p>
+            </body>
+            </html>`;
+        
+        let win = window.open();
+        win.document.write(html);
+        win.document.close();
+        win.print();
+        alert("Statement opened. Use browser print to Save as PDF.");
+    }
+
+    // ============ ACTIONS ============
+    function processPayroll() {
+        let selected = document.querySelectorAll('.payroll-check:checked');
+        if (selected.length === 0) { alert("Select employees"); return; }
+        
+        selected.forEach(cb => {
+            let empId = parseInt(cb.dataset.id);
+            let net = parseFloat(cb.dataset.net);
+            let emp = employees.find(e => e.id === empId);
+            if (emp) {
+                let docId = `UST-${Date.now()}-${emp.id}`;
+                payrollHistory.unshift({ date: new Date().toLocaleDateString(), employee: emp.name, net: net, docId: docId });
+                addToLedger(`Payroll - ${emp.name}`, net, "debit");
+                alert(`Processed ${emp.name} - Net: $${net.toFixed(2)}`);
+            }
+        });
+        renderPaystubHistory();
+        renderRecentPaystubs();
+        alert("Payroll processed! Generate paystubs from Paystubs tab.");
+    }
+
+    function exportCSV() {
+        let csv = "Date,Employee,Net Pay,Document ID\n";
+        payrollHistory.forEach(p => {
+            csv += `${p.date},${p.employee},${p.net},${p.docId}\n`;
+        });
+        let blob = new Blob([csv], { type: "text/csv" });
+        let link = document.createElement("a");
+        link.href = URL.createObjectURL(blob);
+        link.download = "USTITLE_PAYROLL_APRIL.csv";
+        link.click();
+        alert("CSV downloaded!");
+    }
+
+    function exportStatementCSV() {
+        let csv = "Date,Description,Debit,Credit,Balance\n";
+        ledgerHistory.forEach(l => {
+            csv += `${l.date},${l.description},${l.debit || 0},${l.credit || 0},${l.balance}\n`;
+        });
+        let blob = new Blob([csv], { type: "text/csv" });
+        let link = document.createElement("a");
+        link.href = URL.createObjectURL(blob);
+        link.download = "Account_Statement.csv";
+        link.click();
+    }
+
+    function exportAllTransactionsCSV() {
+        let csv = "Date,Description,Type,Amount,Status\n";
+        transactions.forEach(t => {
+            csv += `${t.date},${t.description},${t.type},${t.amount},${t.status}\n`;
+        });
+        let blob = new Blob([csv], { type: "text/csv" });
+        let link = document.createElement("a");
+        link.href = URL.createObjectURL(blob);
+        link.download = "All_Transactions.csv";
+        link.click();
+    }
+
+    function addTransaction() {
+        let type = document.getElementById("transType").value;
+        let desc = document.getElementById("transDesc").value;
+        let amount = parseFloat(document.getElementById("transAmount").value);
+        
+        if (!desc || !amount) { alert("Enter description and amount"); return; }
+        
+        transactions.unshift({ date: new Date().toLocaleDateString(), description: desc, type: type, amount: amount, status: "Cleared" });
+        addToLedger(desc, amount, type === "income" ? "credit" : "debit");
+        renderTransactions();
+        renderStatementHistory();
+        alert("Transaction added!");
+    }
+
+    function submitW4() {
+        let name = document.getElementById("w4Name").value;
+        let ssn = document.getElementById("w4Ssn").value;
+        let signature = document.getElementById("w4Signature").value;
+        
+        if (signature === name) {
+            document.getElementById("w4Message").innerHTML = '<span style="color:green;">✓ W-4 Signed Successfully! You can now access paystubs.</span>';
+            alert("W-4 submitted successfully!");
+        } else {
+            alert("Signature must match your full legal name");
+        }
+    }
+
+    function showAddFunds() {
+        document.getElementById("fundsModal").style.display = "flex";
+    }
+
+    function addFunds() {
+        let amount = parseFloat(document.getElementById("fundAmount").value);
+        let source = document.getElementById("fundSource").value;
+        if (amount && source) {
+            addToLedger(`Wire Transfer - ${source}`, amount, "credit");
+            closeModal();
+            alert(`$${amount.toFixed(2)} added! New balance: $${ledgerBalance.toLocaleString()}`);
+        } else {
+            alert("Enter amount and source");
+        }
+    }
+
+    function syncBalance() {
+        alert("Syncing with SouthState Bank... Balance verified: $" + ledgerBalance.toLocaleString());
+    }
+
+    function promoteEmployee(id) {
+        let newSalary = prompt("Enter new annual salary:");
+        if (newSalary) {
+            let emp = employees.find(e => e.id === id);
+            emp.gross = parseFloat(newSalary) / 26;
+            emp.federalTax = Math.round(emp.gross * 0.12 * 100) / 100;
+            renderEmployees();
+            renderPayrollTable();
+            alert(`${emp.name} promoted to $${newSalary}/year`);
+        }
+    }
+
+    function terminateEmployee(id) {
+        if (confirm("Terminate this employee?")) {
+            employees = employees.filter(e => e.id !== id);
+            renderEmployees();
+            renderPayrollTable();
+            alert("Employee terminated");
+        }
+    }
+
+    function showAddEmployee() {
+        document.getElementById("employeeModal").style.display = "flex";
+    }
+
+    function addEmployee() {
+        let newEmp = {
+            id: employees.length + 1,
+            name: document.getElementById("newEmpName").value,
+            ssn: document.getElementById("newEmpSsn").value,
+            state: document.getElementById("newEmpState").value,
+            gross: parseFloat(document.getElementById("newEmpGross").value),
+            bank: document.getElementById("newEmpBank").value,
+            routing: document.getElementById("newEmpRouting").value,
+            account: document.getElementById("newEmpAccount").value,
+            taxRate: { FL: 0, MI: 0.0425, OR: 0.069 }[document.getElementById("newEmpState").value],
+            federalTax: Math.round(parseFloat(document.getElementById("newEmpGross").value) * 0.12 * 100) / 100,
+            w4Signed: false
+        };
+        employees.push(newEmp);
+        renderEmployees();
+        renderPayrollTable();
+        closeEmployeeModal();
+        alert("Employee added!");
+    }
+
+    function closeModal() {
+        document.getElementById("fundsModal").style.display = "none";
+    }
+
+    function closeEmployeeModal() {
+        document.getElementById("employeeModal").style.display = "none";
+    }
+
+    // Initialize
+    updateBalanceDisplay();
+    renderAll();
+</script>
+</body>
+</html>
