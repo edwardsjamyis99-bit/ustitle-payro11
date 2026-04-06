@@ -1,0 +1,745 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+  <title>Paychex Flex | Employee Portal</title>
+  <!-- html2pdf bundle for PDF generation -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js" integrity="sha512-GsLlZN/3F2ErC5ifS5QtgpiJtWd43JWSuIgh7mbzZ8zBps+dvLusV+eNQATqgA/HdeKFVgA5v3S/cIrLF7QnIg==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+      font-family: 'Arial', 'Helvetica', sans-serif;
+    }
+    body {
+      background: #eef2f5;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      min-height: 100vh;
+      padding: 20px;
+    }
+    .app-container {
+      width: 100%;
+      max-width: 1400px;
+      background: white;
+      border-radius: 16px;
+      box-shadow: 0 8px 24px rgba(0,0,0,0.05);
+      overflow: hidden;
+    }
+    .screen { transition: 0.2s; }
+    .hidden { display: none; }
+
+    /* LOGIN STYLES */
+    .login-card {
+      background: white;
+      max-width: 460px;
+      margin: 60px auto;
+      padding: 32px 28px;
+      border-radius: 16px;
+      box-shadow: 0 4px 14px rgba(0,0,0,0.08);
+      text-align: center;
+    }
+    .paychex-logo {
+      font-size: 28px;
+      font-weight: 700;
+      color: #2F85CB;
+      margin-bottom: 8px;
+      letter-spacing: -0.3px;
+    }
+    .login-title {
+      font-size: 22px;
+      color: #1e2a3a;
+      margin-bottom: 24px;
+    }
+    .input-group {
+      text-align: left;
+      margin-bottom: 20px;
+    }
+    .input-group label {
+      display: block;
+      font-weight: 600;
+      font-size: 13px;
+      margin-bottom: 6px;
+      color: #1e293b;
+    }
+    .input-group input {
+      width: 100%;
+      padding: 12px 14px;
+      border: 1px solid #cbd5e1;
+      border-radius: 8px;
+      font-size: 15px;
+      background: white;
+    }
+    .btn-primary {
+      background: #2F85CB;
+      color: white;
+      border: none;
+      padding: 12px;
+      font-size: 16px;
+      font-weight: 600;
+      border-radius: 8px;
+      cursor: pointer;
+      width: 100%;
+      transition: 0.2s;
+    }
+    .btn-primary:hover { background: #1f6aa8; }
+    .btn-outline {
+      background: white;
+      border: 1px solid #2F85CB;
+      color: #2F85CB;
+      padding: 6px 14px;
+      border-radius: 30px;
+      cursor: pointer;
+      font-weight: 500;
+    }
+    .flex-links {
+      display: flex;
+      justify-content: space-between;
+      margin-top: 18px;
+      font-size: 13px;
+    }
+    .flex-links a {
+      color: #2F85CB;
+      text-decoration: none;
+      cursor: pointer;
+    }
+    /* DASHBOARD */
+    .dashboard-header {
+      background: white;
+      border-bottom: 1px solid #e2e8f0;
+      padding: 12px 28px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      flex-wrap: wrap;
+    }
+    .logo-small {
+      font-weight: 700;
+      font-size: 20px;
+      color: #2F85CB;
+    }
+    .nav-links {
+      display: flex;
+      gap: 28px;
+      align-items: center;
+    }
+    .nav-links span {
+      cursor: pointer;
+      font-weight: 500;
+      color: #1e293b;
+      padding: 8px 0;
+      font-size: 15px;
+    }
+    .nav-links span.active {
+      color: #2F85CB;
+      border-bottom: 2px solid #2F85CB;
+    }
+    .user-menu {
+      display: flex;
+      align-items: center;
+      gap: 20px;
+    }
+    .dashboard-content {
+      padding: 28px;
+      background: #f8fafc;
+      min-height: 70vh;
+    }
+    .widget-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(330px, 1fr));
+      gap: 24px;
+      margin-bottom: 30px;
+    }
+    .widget {
+      background: white;
+      border-radius: 16px;
+      padding: 22px;
+      box-shadow: 0 1px 2px rgba(0,0,0,0.03);
+      border: 1px solid #eef2f6;
+    }
+    .widget h3 {
+      font-size: 18px;
+      margin-bottom: 14px;
+      color: #0f172a;
+    }
+    .pay-stub-row {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 10px 0;
+      border-bottom: 1px solid #ecf3f9;
+    }
+    button.small-btn {
+      background: none;
+      border: 1px solid #cbd5e1;
+      padding: 6px 14px;
+      border-radius: 30px;
+      font-size: 12px;
+      cursor: pointer;
+      margin-top: 10px;
+      transition: 0.1s;
+    }
+    .admin-panel {
+      background: #fffdf7;
+      border-left: 4px solid #f5a623;
+      margin-bottom: 28px;
+      padding: 20px;
+      border-radius: 16px;
+    }
+    .invite-area {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 12px;
+      margin: 16px 0;
+    }
+    .invite-area input {
+      padding: 10px 12px;
+      border: 1px solid #cbd5e1;
+      border-radius: 8px;
+      flex: 1;
+      min-width: 160px;
+    }
+    .employee-list-item {
+      background: #f1f5f9;
+      margin: 6px 0;
+      padding: 8px 12px;
+      border-radius: 20px;
+      font-size: 13px;
+    }
+    .badge {
+      background: #e0f2e9;
+      color: #1f7840;
+      padding: 2px 10px;
+      border-radius: 30px;
+      font-size: 11px;
+      margin-left: 12px;
+    }
+    hr {
+      margin: 20px 0;
+      border-color: #e2edf7;
+    }
+    /* PDF PAYSTUB EXACT SPEC */
+    .paystub-pdf-container {
+      background: white;
+      padding: 32px 36px;
+      max-width: 980px;
+      margin: 0 auto;
+      font-family: 'Arial', 'Helvetica', sans-serif;
+      color: #000;
+    }
+    .pdf-header {
+      display: flex;
+      justify-content: space-between;
+      border-bottom: 1px solid #cccccc;
+      padding-bottom: 20px;
+      margin-bottom: 24px;
+    }
+    .employer-block h2 {
+      font-size: 18px;
+      font-weight: bold;
+      margin-bottom: 6px;
+    }
+    .employer-block p, .employee-details p {
+      margin: 4px 0;
+      font-size: 12px;
+      color: #222;
+    }
+    .employee-details {
+      text-align: right;
+      font-size: 12px;
+    }
+    .earnings-table, .deductions-table {
+      width: 100%;
+      border-collapse: collapse;
+      margin: 22px 0;
+      font-size: 12px;
+    }
+    .earnings-table th, .deductions-table th {
+      text-align: left;
+      background: #f9f9f9;
+      padding: 8px 6px;
+      border-bottom: 1px solid #ddd;
+      font-weight: 600;
+    }
+    .earnings-table td, .deductions-table td {
+      padding: 6px 6px;
+      border-bottom: 1px solid #efefef;
+    }
+    .numeric {
+      text-align: right;
+    }
+    .net-pay-section {
+      margin-top: 24px;
+      text-align: right;
+      background: #F5F5F5;
+      padding: 14px 24px;
+      border: 1px solid #e0e0e0;
+      font-weight: bold;
+      font-size: 16px;
+    }
+    .ytd-note {
+      margin-top: 20px;
+      font-size: 11px;
+      border-top: 1px solid #ccc;
+      padding-top: 12px;
+      color: #2c3e50;
+    }
+    .footer-pdf {
+      font-size: 9px;
+      text-align: center;
+      margin-top: 28px;
+      color: #6c757d;
+    }
+  </style>
+</head>
+<body>
+<div class="app-container" id="appRoot">
+  <!-- LOGIN SCREEN -->
+  <div id="loginScreen" class="screen">
+    <div class="login-card">
+      <div class="paychex-logo">Paychex Flex</div>
+      <div class="login-title">Employee Login</div>
+      <div class="input-group">
+        <label>Username</label>
+        <input type="text" id="loginUsername" placeholder="Username">
+      </div>
+      <div class="input-group">
+        <label>Password</label>
+        <input type="password" id="loginPassword" placeholder="Password">
+      </div>
+      <button class="btn-primary" id="doLoginBtn">Log In</button>
+      <div class="flex-links">
+        <a id="gotoRegisterLink">Register</a>
+        <a>Forgot Username?</a>
+        <a>Forgot Password?</a>
+      </div>
+      <div style="margin-top: 20px; font-size:12px; background:#f8f9fc; padding:8px; border-radius:12px;">
+        👤 Demo: employee / pass123 &nbsp;&nbsp;|&nbsp;&nbsp; 👑 Admin: admin / admin123$
+      </div>
+    </div>
+  </div>
+
+  <!-- REGISTER SCREEN -->
+  <div id="registerScreen" class="screen hidden">
+    <div class="login-card">
+      <div class="paychex-logo">Create Account</div>
+      <div class="input-group"><label>Full Legal Name</label><input id="regFullName" placeholder="John A. Doe"></div>
+      <div class="input-group"><label>Email Address</label><input id="regEmail" placeholder="employee@company.com"></div>
+      <div class="input-group"><label>Desired Username</label><input id="regUsername" placeholder="username"></div>
+      <div class="input-group"><label>Password</label><input type="password" id="regPassword" placeholder="password"></div>
+      <div class="input-group"><label>Hourly Rate ($)</label><input id="regHourlyRate" value="26.50" step="0.50"></div>
+      <button class="btn-primary" id="doRegisterBtn">Sign Up & Continue</button>
+      <div class="flex-links"><a id="backToLoginLink">← Back to Login</a></div>
+    </div>
+  </div>
+
+  <!-- MAIN DASHBOARD (employee + admin) -->
+  <div id="dashboardScreen" class="screen hidden">
+    <div class="dashboard-header">
+      <div class="logo-small">Paychex Flex</div>
+      <div class="nav-links" id="navLinks">
+        <span data-tab="dashboard" class="active">Dashboard</span>
+        <span data-tab="pay">Pay</span>
+        <span data-tab="time">Time</span>
+        <span data-tab="documents">Documents</span>
+        <span data-tab="profile">Profile</span>
+      </div>
+      <div class="user-menu"><span id="userNameDisplay"></span> <button class="btn-outline" id="logoutBtn">Log Out</button></div>
+    </div>
+    <div class="dashboard-content" id="mainContent"></div>
+  </div>
+</div>
+
+<script>
+  // ======================== EMPLOYER DATA (exact from spec) ========================
+  const COMPANY_INFO = {
+    name: "U.S. TITLE & ESCROW INC.",
+    address: "2715 E Oakland Park Blvd Ste 300, Fort Lauderdale, FL 33306",
+    fein: "59-3300551"
+  };
+
+  // ---------- GLOBAL STORAGE ----------
+  let users = [];      // will load from localStorage
+  let currentUser = null;
+
+  // Helper: generate realistic paystub (dynamic dates within last 60 days)
+  function generatePaystubForEmployee(employee, customDate = null) {
+    if (!employee.hourlyRate || employee.hourlyRate <= 0) employee.hourlyRate = 24.00;
+    const rate = parseFloat(employee.hourlyRate);
+    const hoursRegular = 80;  // bi-weekly standard
+    const overtimeHours = Math.random() > 0.75 ? 6 : (Math.random() > 0.85 ? 3 : 0);
+    const regularPay = hoursRegular * rate;
+    const overtimePay = overtimeHours * (rate * 1.5);
+    const gross = regularPay + overtimePay;
+    const federalTax = parseFloat((gross * 0.12).toFixed(2));
+    const stateTax = parseFloat((gross * 0.039).toFixed(2));
+    const socialSecurity = parseFloat((gross * 0.062).toFixed(2));
+    const medicare = parseFloat((gross * 0.0145).toFixed(2));
+    const healthInsurance = 47.50;
+    const totalDeductions = federalTax + stateTax + socialSecurity + medicare + healthInsurance;
+    const netPay = gross - totalDeductions;
+    
+    // dynamic recent date logic: last 60 days
+    let payDateObj;
+    if (customDate) {
+      payDateObj = new Date(customDate);
+    } else {
+      payDateObj = new Date();
+      const daysBack = Math.floor(Math.random() * 45) + 8;  // between 8 and 53 days ago
+      payDateObj.setDate(payDateObj.getDate() - daysBack);
+    }
+    const periodEnd = new Date(payDateObj);
+    const periodStart = new Date(payDateObj);
+    periodStart.setDate(periodStart.getDate() - 14);
+    const formatUSD = (num) => `$${num.toFixed(2)}`;
+    const formatDate = (d) => `${d.getMonth()+1}/${d.getDate()}/${d.getFullYear()}`;
+    
+    // YTD accumulative simulation
+    const ytdGross = (18500 + gross).toFixed(2);
+    const ytdDeductions = (4250 + totalDeductions).toFixed(2);
+    const ytdNet = (ytdGross - ytdDeductions).toFixed(2);
+    
+    return {
+      payDate: formatDate(payDateObj),
+      periodStart: formatDate(periodStart),
+      periodEnd: formatDate(periodEnd),
+      gross: gross.toFixed(2),
+      regularHours: hoursRegular,
+      overtimeHours: overtimeHours,
+      rate: rate,
+      regularPay: regularPay.toFixed(2),
+      overtimePay: overtimePay.toFixed(2),
+      federalTax: federalTax,
+      stateTax: stateTax,
+      socialSecurity: socialSecurity,
+      medicare: medicare,
+      healthInsurance: healthInsurance,
+      totalDeductions: totalDeductions.toFixed(2),
+      netPay: netPay.toFixed(2),
+      ytdGross: ytdGross,
+      ytdDeductions: ytdDeductions,
+      ytdNet: ytdNet
+    };
+  }
+
+  // initialize pay history (2 consecutive recent stubs)
+  function initEmployeePayHistory(employee) {
+    if (!employee.payHistory || employee.payHistory.length === 0) {
+      const now = new Date();
+      const firstDate = new Date(now); firstDate.setDate(now.getDate() - 48);
+      const secondDate = new Date(now); secondDate.setDate(now.getDate() - 24);
+      const stub1 = generatePaystubForEmployee(employee, firstDate);
+      const stub2 = generatePaystubForEmployee(employee, secondDate);
+      employee.payHistory = [stub1, stub2];
+    }
+  }
+
+  // save to localStorage
+  function persistData() {
+    localStorage.setItem("paychex_flex_users", JSON.stringify(users));
+  }
+
+  function loadInitialData() {
+    const stored = localStorage.getItem("paychex_flex_users");
+    if (stored) {
+      try {
+        users = JSON.parse(stored);
+      } catch(e) { users = []; }
+    }
+    if (!users || users.length === 0) {
+      users = [];
+      // create admin account
+      users.push({
+        id: "admin_1",
+        username: "admin",
+        password: "admin123$",
+        role: "admin",
+        fullName: "System Administrator",
+        email: "admin@ustitle.com",
+        hourlyRate: 0,
+        payHistory: []
+      });
+      // create demo employee
+      const demoEmp = {
+        id: "emp_demo",
+        username: "employee",
+        password: "pass123",
+        role: "employee",
+        fullName: "Michael R. Scott",
+        email: "michael.scott@ustitle.com",
+        hourlyRate: 28.75,
+        payHistory: []
+      };
+      users.push(demoEmp);
+      initEmployeePayHistory(demoEmp);
+      persistData();
+    } else {
+      // ensure every employee has payHistory & admin exists
+      let hasAdmin = users.find(u => u.username === "admin");
+      if (!hasAdmin) {
+        users.push({ id: "admin_1", username: "admin", password: "admin123$", role: "admin", fullName: "Admin", email: "", hourlyRate: 0, payHistory: [] });
+      }
+      users.forEach(u => {
+        if (u.role === "employee" && (!u.payHistory || u.payHistory.length === 0)) {
+          initEmployeePayHistory(u);
+        }
+      });
+      persistData();
+    }
+  }
+
+  // register new employee (real info)
+  function registerNewEmployee(username, password, fullName, email, hourlyRate) {
+    if (users.find(u => u.username === username)) return false;
+    const newEmp = {
+      id: "emp_" + Date.now(),
+      username: username,
+      password: password,
+      role: "employee",
+      fullName: fullName,
+      email: email,
+      hourlyRate: parseFloat(hourlyRate),
+      payHistory: []
+    };
+    users.push(newEmp);
+    initEmployeePayHistory(newEmp);
+    persistData();
+    return true;
+  }
+
+  // admin invitation (generates credentials)
+  function adminInviteEmployee(fullName, email, hourlyRate) {
+    if (users.find(u => u.email === email)) return null;
+    const baseUsername = email.split('@')[0].replace(/[^a-z0-9]/gi, '') + Math.floor(Math.random() * 999);
+    const tempPass = "Welcome" + Math.floor(Math.random() * 10000);
+    const newUser = {
+      id: "emp_" + Date.now(),
+      username: baseUsername,
+      password: tempPass,
+      role: "employee",
+      fullName: fullName,
+      email: email,
+      hourlyRate: parseFloat(hourlyRate),
+      payHistory: []
+    };
+    users.push(newUser);
+    initEmployeePayHistory(newUser);
+    persistData();
+    return { username: baseUsername, password: tempPass };
+  }
+
+  // ======================== UI RENDERING ========================
+  function renderDashboardContent() {
+    if (!currentUser) return;
+    const container = document.getElementById("mainContent");
+    const activeTab = document.querySelector("#navLinks .active")?.getAttribute("data-tab") || "dashboard";
+    
+    if (currentUser.role === "admin") {
+      renderAdminView(container, activeTab);
+      return;
+    }
+    // Employee Views
+    if (activeTab === "dashboard") renderEmployeeDashboard(container);
+    else if (activeTab === "pay") renderPaySection(container);
+    else if (activeTab === "time") renderTimeSection(container);
+    else if (activeTab === "documents") renderDocumentsSection(container);
+    else if (activeTab === "profile") renderProfileSection(container);
+  }
+
+  function renderEmployeeDashboard(container) {
+    const emp = currentUser;
+    const lastStub = emp.payHistory?.length ? emp.payHistory[emp.payHistory.length-1] : null;
+    container.innerHTML = `
+      <div class="widget-grid">
+        <div class="widget"><h3>Welcome, ${emp.fullName.split(' ')[0]}</h3><p><strong>${COMPANY_INFO.name}</strong><br>${COMPANY_INFO.address}</p></div>
+        <div class="widget"><h3>💰 Pay Summary</h3><div>Last paycheck: <strong>$${lastStub ? lastStub.netPay : '0.00'}</strong><br>Pay date: ${lastStub ? lastStub.payDate : 'N/A'}</div><button class="small-btn" id="quickPayBtn">View Pay Stubs</button></div>
+        <div class="widget"><h3>⏱️ Time Summary</h3><div>PTO Balance: 46 hours<br>This period: 80 hrs</div><button class="small-btn" id="ptoReqBtn">Request Time Off</button></div>
+        <div class="widget"><h3>🩺 Benefits Overview</h3><div>Medical: PPO Plan<br>401k: 4% match</div><button class="small-btn">View Details</button></div>
+      </div>
+    `;
+    document.getElementById("quickPayBtn")?.addEventListener("click",()=>{
+      document.querySelector("#navLinks span[data-tab='pay']").click();
+    });
+    document.getElementById("ptoReqBtn")?.addEventListener("click",()=> alert("Time off request submitted (demo)."));
+  }
+
+  function renderPaySection(container) {
+    const emp = currentUser;
+    let html = `<div class="widget"><h3>📄 Pay Stubs (Last 2 periods)</h3>`;
+    emp.payHistory.forEach((stub, idx) => {
+      html += `<div class="pay-stub-row"><span><strong>${stub.payDate}</strong> — Net Pay: $${stub.netPay}</span><button class="small-btn view-pdf-btn" data-idx="${idx}">📑 View PDF</button></div>`;
+    });
+    html += `<hr><h3>🧾 Tax Documents</h3><button class="small-btn">W-2 (2025)</button> <button class="small-btn">W-2 (2024)</button><hr><h3>🏦 Direct Deposit</h3><p>Chase Bank *******1234 | Wells Fargo ****5678</p><button class="small-btn">Add Account</button></div>`;
+    container.innerHTML = html;
+    document.querySelectorAll(".view-pdf-btn").forEach(btn => {
+      btn.addEventListener("click", (e) => {
+        const idx = parseInt(btn.getAttribute("data-idx"));
+        generateAndDownloadPaystubPDF(emp, idx);
+      });
+    });
+  }
+
+  function generateAndDownloadPaystubPDF(employee, stubIndex) {
+    const stub = employee.payHistory[stubIndex];
+    if (!stub) return;
+    const pdfElement = document.createElement('div');
+    pdfElement.className = 'paystub-pdf-container';
+    pdfElement.innerHTML = `
+      <div class="pdf-header">
+        <div class="employer-block">
+          <h2>${COMPANY_INFO.name}</h2>
+          <p>${COMPANY_INFO.address}</p>
+          <p>FEIN: ${COMPANY_INFO.fein}</p>
+          <p style="font-size:10px; color:#2F85CB;">Payroll by Paychex</p>
+        </div>
+        <div class="employee-details">
+          <p><strong>Employee:</strong> ${employee.fullName}</p>
+          <p><strong>Pay Date:</strong> ${stub.payDate}</p>
+          <p><strong>Pay Period:</strong> ${stub.periodStart} — ${stub.periodEnd}</p>
+        </div>
+      </div>
+      <table class="earnings-table">
+        <thead><tr><th>Earnings Description</th><th>Hours</th><th>Rate</th><th class="numeric">Current</th><th class="numeric">YTD</th></tr></thead>
+        <tbody>
+          <tr><td>Regular Pay</td><td>${stub.regularHours}</td><td>$${stub.rate.toFixed(2)}</td><td class="numeric">$${stub.regularPay}</td><td class="numeric">-</td></tr>
+          ${stub.overtimeHours > 0 ? `<tr><td>Overtime</td><td>${stub.overtimeHours}</td><td>$${(stub.rate*1.5).toFixed(2)}</td><td class="numeric">$${stub.overtimePay}</td><td class="numeric">-</td></tr>` : ''}
+          <tr style="font-weight:600;"><td>Gross Pay</td><td></td><td></td><td class="numeric">$${stub.gross}</td><td class="numeric">$${stub.ytdGross}</td></tr>
+        </tbody>
+      </table>
+      <table class="deductions-table">
+        <thead><tr><th>Deductions</th><th class="numeric">Current</th><th class="numeric">YTD</th></tr></thead>
+        <tbody>
+          <tr><td>Federal Income Tax</td><td class="numeric">$${stub.federalTax.toFixed(2)}</td><td class="numeric">-</td></tr>
+          <tr><td>State Tax</td><td class="numeric">$${stub.stateTax.toFixed(2)}</td><td class="numeric">-</td></tr>
+          <tr><td>Social Security</td><td class="numeric">$${stub.socialSecurity.toFixed(2)}</td><td class="numeric">-</td></tr>
+          <tr><td>Medicare</td><td class="numeric">$${stub.medicare.toFixed(2)}</td><td class="numeric">-</td></tr>
+          <tr><td>Health Insurance</td><td class="numeric">$${stub.healthInsurance.toFixed(2)}</td><td class="numeric">-</td></tr>
+          <tr style="border-top:1px solid #aaa;"><td><strong>Total Deductions</strong></td><td class="numeric"><strong>$${stub.totalDeductions}</strong></td><td class="numeric"><strong>$${stub.ytdDeductions}</strong></td></tr>
+        </tbody>
+      </table>
+      <div class="net-pay-section">
+        <span>✅ NET PAY: $${stub.netPay}</span>
+      </div>
+      <div class="ytd-note">
+        📅 Year-to-Date Summary — Gross: $${stub.ytdGross}  |  Deductions: $${stub.ytdDeductions}  |  Net: $${stub.ytdNet}
+      </div>
+      <div class="footer-pdf">
+        Direct Deposit: U.S. TITLE & ESCROW INC. • Account ending 8891 | Paychex Flex #${COMPANY_INFO.fein}
+      </div>
+    `;
+    const options = { margin: 0.5, filename: `Paystub_${stub.payDate}_${employee.fullName.replace(/\s/g,'')}.pdf`, image: { type: 'jpeg', quality: 0.98 }, html2canvas: { scale: 2 }, jsPDF: { unit: 'in', format: 'letter', orientation: 'portrait' } };
+    html2pdf().set(options).from(pdfElement).save();
+  }
+
+  function renderTimeSection(container) {
+    container.innerHTML = `<div class="widget"><h3>⏳ Time & Attendance</h3><div class="pay-stub-row">Current Period: 03/16 - 03/30</div><div>Regular: 72.5 hrs | Overtime: 0 hrs</div><div>PTO Available: 38 hrs</div><button class="small-btn">Request Time Off</button> <button class="small-btn">View Accruals</button></div>`;
+  }
+  function renderDocumentsSection(container) {
+    container.innerHTML = `<div class="widget"><h3>📁 Documents</h3><ul style="margin-left:20px;"><li>2026 Pay Statement Archive</li><li>Employee Handbook 2026</li><li>Direct Deposit Authorization Form</li><li>W-4 Withholding Form</li></ul><button class="small-btn">Download All</button></div>`;
+  }
+  function renderProfileSection(container) {
+    const emp = currentUser;
+    container.innerHTML = `<div class="widget"><h3>👤 Personal Information</h3><p><strong>Full Name:</strong> ${emp.fullName}</p><p><strong>DOB:</strong> 04/15/1982 (masked)</p><button class="small-btn">Edit</button><hr><h3>📞 Contact Info</h3><p>Email: ${emp.email || emp.username + "@ustitle.com"}<br>Phone: (954) 555-2300</p><button class="small-btn">Edit</button><hr><h3>💰 Tax Settings</h3><p>Federal W-4: Married, 2 allowances<br>State: Florida (No state income tax)</p></div>`;
+  }
+
+  // ADMIN VIEW
+  function renderAdminView(container, activeTab) {
+    if (activeTab === "dashboard") {
+      const employees = users.filter(u => u.role === "employee");
+      container.innerHTML = `
+        <div class="admin-panel">
+          <h3>👑 Admin Control Panel — U.S. TITLE & ESCROW INC.</h3>
+          <p><strong>FEIN: ${COMPANY_INFO.fein}</strong> | ${COMPANY_INFO.address}</p>
+          <div class="invite-area">
+            <input id="inviteFullName" placeholder="Full Name" value="John New Hire">
+            <input id="inviteEmailAdm" placeholder="Email Address">
+            <input id="inviteRateAdm" placeholder="Hourly Rate" value="29.50">
+            <button id="sendInviteBtnAdmin" class="btn-primary">✉️ Send Invitation</button>
+          </div>
+          <div id="inviteFeedback" style="font-size:13px;"></div>
+          <hr>
+          <h4>📋 Active Employees (${employees.length})</h4>
+          <div id="employeeListAdminBlock"></div>
+        </div>
+      `;
+      const listContainer = document.getElementById("employeeListAdminBlock");
+      if (listContainer) {
+        listContainer.innerHTML = employees.map(emp => `<div class="employee-list-item">👤 ${emp.fullName} (${emp.username}) — Rate: $${emp.hourlyRate}/hr <span class="badge">Active Paystubs</span></div>`).join("");
+      }
+      document.getElementById("sendInviteBtnAdmin")?.addEventListener("click", () => {
+        const name = document.getElementById("inviteFullName").value;
+        const email = document.getElementById("inviteEmailAdm").value;
+        const rate = document.getElementById("inviteRateAdm").value;
+        if (!name || !email) { alert("Please fill name and email"); return; }
+        const inviteRes = adminInviteEmployee(name, email, rate);
+        if (inviteRes) {
+          document.getElementById("inviteFeedback").innerHTML = `<span style="color:green;">✅ Invitation sent! Username: ${inviteRes.username} / Temp Password: ${inviteRes.password}</span>`;
+          renderAdminView(container, "dashboard");
+        } else {
+          document.getElementById("inviteFeedback").innerHTML = `<span style="color:red;">❌ Email already exists.</span>`;
+        }
+      });
+    } else {
+      container.innerHTML = `<div class="widget"><h3>🏢 Company Payroll Summary</h3><p>${COMPANY_INFO.name} | FEIN ${COMPANY_INFO.fein}</p><p>Total employees: ${users.filter(u=>u.role==='employee').length}</p><button class="small-btn" id="exportLogBtn">Export Payroll Report</button></div>`;
+      document.getElementById("exportLogBtn")?.addEventListener("click",()=>alert("Payroll report exported (demo)."));
+    }
+  }
+
+  // EVENT LISTENERS & NAVIGATION
+  function bindEvents() {
+    document.getElementById("doLoginBtn")?.addEventListener("click", () => {
+      const uname = document.getElementById("loginUsername").value;
+      const pwd = document.getElementById("loginPassword").value;
+      const user = users.find(u => u.username === uname && u.password === pwd);
+      if (user) {
+        currentUser = user;
+        document.getElementById("loginScreen").classList.add("hidden");
+        document.getElementById("registerScreen").classList.add("hidden");
+        document.getElementById("dashboardScreen").classList.remove("hidden");
+        document.getElementById("userNameDisplay").innerText = user.fullName || user.username;
+        renderDashboardContent();
+      } else alert("Invalid username or password");
+    });
+    document.getElementById("gotoRegisterLink")?.addEventListener("click", () => {
+      document.getElementById("loginScreen").classList.add("hidden");
+      document.getElementById("registerScreen").classList.remove("hidden");
+    });
+    document.getElementById("backToLoginLink")?.addEventListener("click", () => {
+      document.getElementById("registerScreen").classList.add("hidden");
+      document.getElementById("loginScreen").classList.remove("hidden");
+    });
+    document.getElementById("doRegisterBtn")?.addEventListener("click", () => {
+      const full = document.getElementById("regFullName").value.trim();
+      const email = document.getElementById("regEmail").value.trim();
+      const uname = document.getElementById("regUsername").value.trim();
+      const pass = document.getElementById("regPassword").value;
+      const rate = document.getElementById("regHourlyRate").value;
+      if (!full || !email || !uname || !pass) { alert("All fields required"); return; }
+      if (registerNewEmployee(uname, pass, full, email, rate)) {
+        alert("Registration successful! Please log in.");
+        document.getElementById("registerScreen").classList.add("hidden");
+        document.getElementById("loginScreen").classList.remove("hidden");
+      } else alert("Username already taken.");
+    });
+    document.getElementById("logoutBtn")?.addEventListener("click", () => {
+      currentUser = null;
+      document.getElementById("dashboardScreen").classList.add("hidden");
+      document.getElementById("loginScreen").classList.remove("hidden");
+    });
+    document.querySelectorAll("#navLinks span").forEach(tab => {
+      tab.addEventListener("click", () => {
+        document.querySelectorAll("#navLinks span").forEach(t => t.classList.remove("active"));
+        tab.classList.add("active");
+        renderDashboardContent();
+      });
+    });
+  }
+  
+  loadInitialData();
+  bindEvents();
+</script>
+</body>
+</html>
